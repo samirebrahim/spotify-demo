@@ -1,0 +1,68 @@
+<div
+  class="form-container form-inline justify-content-center"
+  [ngClass]="{ searchRes: artists.length > 0 }"
+>
+  <div class="form-group">
+    <span (click)="clearInput()" aria-hidden="true" *ngIf="searchQ.value"
+      >&times;</span
+    >
+    <input
+      (keyup.enter)="search()"
+      placeholder="Search for an artist .."
+      [formControl]="searchQ"
+      type="text"
+      class="form-control"
+      autofocus
+    />
+  </div>
+</div>
+<div
+  class="row"
+  infiniteScroll
+  [infiniteScrollDistance]="5"
+  [infiniteScrollThrottle]="50"
+  (scrolled)="onScroll()"
+  [scrollWindow]="true"
+  *ngIf="!albums.length; else albumsTem"
+>
+  <div
+    class="col-md-4 col-sm-6 col-lg-3"
+    (click)="getAlbum(artist.id)"
+    *ngFor="let artist of artists; trackBy: trackBy"
+  >
+    <div class="artist ">
+      <img [src]="artist.image" alt="" />
+      <p class="name">{{ artist.name }}</p>
+      <p>{{ artist.followers }} followers</p>
+      <span class="stars star-{{ artist.ratings }}"></span>
+    </div>
+  </div>
+</div>
+
+<ng-template #albumsTem>
+  <div
+    class="row"
+    infiniteScroll
+    [infiniteScrollDistance]="5"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="onScroll(true)"
+    [scrollWindow]="true"
+  >
+    <div
+      class="col-md-4 col-sm-6 col-lg-3"
+      *ngFor="let album of albums; trackBy: trackBy"
+    >
+      <div class="artist album">
+        <img [src]="album.image" alt="" />
+        <p class="name">{{ album.name }}</p>
+        <p *ngIf="album.artists">{{ album.artists }}</p>
+        <p>{{ album.release_year }}</p>
+
+        <p>{{ album.total_tracks }} tracks</p>
+        <a href="{{ album.url }}" target="_blank">
+          preview album
+        </a>
+      </div>
+    </div>
+  </div>
+</ng-template>
