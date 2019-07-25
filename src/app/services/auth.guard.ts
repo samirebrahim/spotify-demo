@@ -1,39 +1,26 @@
 import { Injectable } from '@angular/core';
 import {
+  Router,
   CanActivate,
   ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  CanActivateChild
+  RouterStateSnapshot
 } from '@angular/router';
-import { fromPairs } from 'lodash';
-import { SpotifyAuthResponse } from '../interfaces/spotifyAuth.interface';
+import { AuthenticationService } from './authentication.service';
 import { TokenService } from './token.service';
 
-@Injectable()
-export class AuthGuard implements CanActivate, CanActivateChild {
-  constructor(private tokenSvc: TokenService) {}
+@Injectable({ providedIn: 'root' })
+export class AuthGuard implements CanActivate {
+  constructor(private router: Router, private tokenSrv: TokenService) {}
 
-  public canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean {
-    return this.canActivateChild(next);
-  }
-
-  public canActivateChild(next: ActivatedRouteSnapshot): boolean {
-    const response = this.extractApiResponse(next.fragment);
-    if (response) {
-      this.tokenSvc.setAuthToken(response);
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    const currentUser = this.tokenSrv.oAuthToken;
+    if (currentUser) {
+      // authorised so return true
+      return true;
     }
-    return !!response;
-  }
 
-  private extractApiResponse(fragment: string): SpotifyAuthResponse | null {
-    if (!!fragment) {
-      return fromPairs(
-        fragment.split('&').map(s => s.split('='))
-      ) as SpotifyAuthResponse;
-    }
-    return null;
+    // not logged in so redirect to login page with the return url
+    this.router.navigate(['/login']);
+    return false;
   }
 }

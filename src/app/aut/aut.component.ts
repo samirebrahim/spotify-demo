@@ -4,8 +4,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-aut',
-  templateUrl: './aut.component.html',
-  styleUrls: ['./aut.component.scss']
+  templateUrl: './aut.component.html'
 })
 export class AutComponent implements OnInit {
   constructor(private tokenSvc: TokenService, private router: Router) {}

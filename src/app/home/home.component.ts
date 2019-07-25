@@ -1,16 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { TokenService } from '../services/token.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  templateUrl: './home.component.html'
 })
-export class HomeComponent implements OnInit {
-  isAuthenticated: boolean;
-  constructor(private tokenSrv: TokenService) {}
-
-  ngOnInit() {
-    this.isAuthenticated = this.tokenSrv.oAuthToken ? true : false;
-  }
+export class HomeComponent {
+  constructor() {}
 }

@@ -19,6 +19,7 @@ export class TokenService {
   public clearToken(): void {
     this.token = '';
     this.token$.next(this.token);
+    this.storageHelperS.removeLocalStorageItem('aC');
   }
 
   public get authHeader(): { [name: string]: string } {
